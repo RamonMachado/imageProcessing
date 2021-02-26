@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
+    "eslint": "^7.20.0",
     "jimp": "^0.16.1",
     "mathjs": "^9.2.0"
   }

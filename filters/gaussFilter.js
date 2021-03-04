@@ -11,7 +11,7 @@ let mask1 = [
 let masks = [mask1];
 
 let resultFunction = (neighborValue, maskValue) => {
-    return (neighborValue * maskValue) / 9;
+    return (neighborValue * maskValue) / 16;
 }
 
 let gaussFilter = new Filter(width, height, masks, {resultFunction});

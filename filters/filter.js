@@ -23,8 +23,8 @@ module.exports = class Filter{
         let imageHeight = image.getHeight();
         let newImage = Object.create(image);
     
-        for (let i = 0; i < imageHeight; i++) {
-            for (let j = 0; j < imageWidth; j++) {
+        for (let i = 0; i < imageWidth; i++) {
+            for (let j = 0; j < imageHeight; j++) {
                 let pixel = {};
                 pixel.r = this.calculatePixelValue(image, i, j, "r");
                 pixel.g = this.calculatePixelValue(image, i, j, "g");
@@ -38,26 +38,47 @@ module.exports = class Filter{
     }
     
     calculatePixelValue(image, x, y, color){
-        let filtered = this.mask;
+
         let result = 0;
+
+        let neighborhood = this.getNeighborhood(image, x, y, this.width, this.height, color);
+
         for (let i = 0; i < this.width; i++) {
-    
-            let xxDict = {0: -1, 1: 0, 2: 1}; 
-            let xx = xxDict[i]; 
-    
             for (let j = 0; j < this.height; j++) {
-    
-                let yyDict = {0: -1, 1: 0, 2: 1}; 
-                let yy = yyDict[j];
-    
-                result += Jimp.intToRGBA(image.getPixelColor(x+xx, y+yy))[color] * filtered[i*this.width+j];
+                result += neighborhood[i][j] * this.mask[i][j];
             }
         }
     
-        result = result / 9;
-        //console.log(result);
-        if(result > 255)
-            result = 255;
+        result = result <= 255 ? result : 255;
+        result = result >= 0 ? result : 0;
+
         return result;
+    }
+
+    getNeighborhood(image, x, y, width, height, color){
+
+        let widthCenter = Math.floor(width / 2) + 1;
+        let heightCenter = Math.floor(height / 2) + 1;
+
+        let neighborhood = (new Array(width)).fill(new Array(height));
+
+        let xIndex = -1*(widthCenter-1);
+
+        for(let i = 0; i < width; i++){
+
+            let yIndex = -1*(heightCenter-1);
+
+            for(let j = 0; j < height; j++){
+
+                let pixel = Jimp.intToRGBA(image.getPixelColor(x+xIndex, y+yIndex))[color];
+                neighborhood[i][j] = pixel ? pixel : 0;
+                
+                yIndex++;
+            }
+
+            xIndex++;
+        }
+
+        return neighborhood;
     }
 }

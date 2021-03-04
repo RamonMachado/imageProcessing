@@ -4,9 +4,8 @@ module.exports = class Filter{
     /** 
         @param {number} width Mask's width
         @param {number} height Mask's height
-        @param {array} mask Mask matrix
-        @param {function} apply Applies the filter on a given image. Returns a new image.
-        @param {function} calculatePixelValue Calculate and returns the value of the given pivel
+        @param {array} masks Array of masks
+        @param {object} options You can override some methods by inclunding them in the options object. Methods supported: apply, resultFunction, calculatePixelValue
     */
     constructor(width, height, masks, options){
         this.width = width;
